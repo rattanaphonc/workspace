@@ -1,0 +1,23 @@
+#!/bin/bash
+
+############# EDIT HERE #############
+export CONTAINER_NAME=top_torch1.13.1
+export GPUS='"device=0"'
+export MEMORY=38GB
+export CPU=16
+export SERVER_MOUNT_POINT=/mnt/int-shared/top_workspace
+export CONT_MOUNT_POINT=/mount
+export PORT=2231
+export IMAGE=top_pytorch:torch1.3.1
+#####################################
+
+docker build . -t $IMAGE
+
+docker run -ti --name $CONTAINER_NAME \
+  --gpus $GPUS --memory=$MEMORY --cpus=$CPU \
+  -v $SERVER_MOUNT_POINT:$CONT_MOUNT_POINT \
+  -w $CONT_MOUNT_POINT \
+  -p $PORT:22 \
+  --device /dev/fuse \
+  --cap-add SYS_ADMIN \
+  --privileged $IMAGE bash

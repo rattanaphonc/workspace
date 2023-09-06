@@ -1,0 +1,18 @@
+#!/bin/bash
+SHARED_FOLDER=/rattanaphon/workspace
+USERNAME=rattanaphon.c
+NAS_ADDRESS=n2-int.myds.me
+MOUNT_POINT=/mount/NAS
+
+if ! [ $(df -h $MOUNT_POINT | grep $SHARED_FOLDER | awk '{print $6}') ]; then
+    read -p "Do you want to mount NAS? [y/N]: " CON
+    ANS1="y"
+    ANS2="Y"
+    if [[ "$CON" = "$ANS1" || "$CON" = "$ANS2" ]]; then
+        echo "mounting"
+        sshfs $USERNAME@$NAS_ADDRESS:$SHARED_FOLDER $MOUNT_POINT
+        echo "Done...."   
+    fi
+else
+    echo "NAS is already mounted >>>>" $(df -h $MOUNT_POINT | grep $SHARED_FOLDER)
+fi
